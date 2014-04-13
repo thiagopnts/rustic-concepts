@@ -1,5 +1,3 @@
-use std::num::FromPrimitive;
-
 #[deriving(Show, FromPrimitive)]
 pub enum Color {
   Black = 0,
@@ -22,23 +20,23 @@ pub enum Color {
 
 struct Char {
   pub char: u8,
-  attr: u8, // 4 bits for foreground and 4 bits for background
+  flags: u8, // 4 bits for foreground and 4 bits for background
 }
 
 impl Char {
   pub fn new(c: char, fg: Color, bg: Color) -> Char {
-    Char { char: c as u8, attr: fg as u8 | (bg as u8 << 4) }
+    Char { char: c as u8, flags: fg as u8 | (bg as u8 << 4) }
   }
 
   pub fn background(&self) -> Color {
-    match FromPrimitive::from_u8(self.attr >> 4 as u8) {
+    match FromPrimitive::from_u8(self.flags >> 4 as u8) {
       Some(color) => color,
       None => Black
     }
   }
 
   pub fn foreground(&self) -> Color {
-    match FromPrimitive::from_u8(self.attr & 0x0F as u8) {
+    match FromPrimitive::from_u8(self.flags & 0x0F as u8) {
       Some(color) => color,
       None => Black
     }
